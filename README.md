@@ -1,113 +1,162 @@
-# NFT Transaction Analyzer
+# <div align="center">🔗 ChainTrace</div>
 
-This tool helps you analyze NFT transfer events from ERC-721 and ERC-1155 contracts on Ethereum.
+<div align="center">
+  <!-- <img src="https://user-images.githubusercontent.com/46517096/185902404-94ab24f2-d8b2-4839-8033-24b14a1869dd.png" alt="ChainTrace Logo" width="200" height="200" /> -->
+  <p><em>A powerful Ethereum NFT transaction analyzer and insights generator</em></p>
+  
+  [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+  [![Node.js 20+](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+</div>
 
-## Setup
+## 📋 Overview
 
-### Python Setup
+ChainTrace is a blockchain analysis tool designed to help researchers, collectors, and developers gain insights into NFT transaction histories. By analyzing on-chain data, ChainTrace provides comprehensive visualizations and statistics about how NFTs move through the Ethereum ecosystem, from initial minting events to subsequent transfers.
+
+## ✨ Features
+
+- 📊 Complete transaction history for any NFT contract
+- 🔄 Automatic categorization of mints vs transfers
+- 📈 Statistical analysis of top holders and busiest periods
+- ⚡ Smart handling of RPC rate limits with automatic fallbacks
+- 📁 CSV and JSON exports for further analysis
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+Choose either Python or Node.js implementation:
+
+<details>
+<summary><b>Python Setup</b></summary>
+
 1. Ensure you have Python 3.10+ installed
 2. Install dependencies:
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
+3. Run with:
+   ```bash
+   python nft_analyzer.py --contract YOUR_CONTRACT_ADDRESS
+   ```
+</details>
 
-### Node.js Setup
+<details>
+<summary><b>Node.js Setup</b></summary>
+
 1. Ensure you have Node.js 20+ installed
 2. Install dependencies:
-   ```
+   ```bash
    npm install
    ```
+3. Run with:
+   ```bash
+   node nft_analyzer.js --contract YOUR_CONTRACT_ADDRESS
+   ```
+</details>
 
-## Setting Up RPC Endpoints
+## 🔑 Setting Up Ethereum RPC Access
 
-The tool now supports fallback between multiple RPC endpoints to handle rate limits. Create a `.env` file with your RPC endpoints:
+ChainTrace requires access to Ethereum blockchain data via an RPC endpoint. Create a `.env` file in the root directory with:
 
 ```
 ALCHEMY_RPC=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
 INFURA_RPC=https://mainnet.infura.io/v3/YOUR_API_KEY
 ```
 
-The scripts will try using Alchemy first, then fall back to Infura if rate limits are hit.
+### Getting Free API Keys
 
-## Getting a Free RPC Endpoint
+| Provider | Sign-up Link | Free Tier |
+|----------|-------------|-----------|
+| Alchemy | [alchemy.com](https://www.alchemy.com) | 300M compute units/month |
+| Infura | [infura.io](https://infura.io) | 100K requests/day |
 
-1. **Alchemy**:
-   - Sign up at [https://www.alchemy.com](https://www.alchemy.com)
-   - Create a new app for Ethereum Mainnet
-   - Copy the HTTPS endpoint URL
+## 📝 Usage Examples
 
-2. **Infura**:
-   - Sign up at [https://infura.io](https://infura.io)
-   - Create a new project
-   - Copy the HTTPS endpoint URL
+### Analyze a Specific NFT Collection
 
-## Usage
+```bash
+# For Python
+python nft_analyzer.py --contract 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e
 
-### Python
-
-Run the analyzer with:
-
-```
-python nft_analyzer.py --contract CONTRACT_ADDRESS
+# For Node.js
+node nft_analyzer.js --contract 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e
 ```
 
-The RPC will be loaded from your .env file, but you can override it:
+### Analyze a Specific Block Range
 
-```
-python nft_analyzer.py --rpc YOUR_RPC_URL --contract CONTRACT_ADDRESS
-```
-
-Optional parameters:
-- `--start` - Starting block number (default: 0)
-- `--end` - Ending block number (default: latest)
-- `--batch` - Batch size for requests (default: 10000)
-- `--output` - Output CSV filename (default: transactions.csv)
-
-Example:
-```
-python nft_analyzer.py --contract 0x1234567890abcdef1234567890abcdef12345678
+```bash
+python nft_analyzer.py --contract 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e --start 14000000 --end 14100000
 ```
 
-### Node.js
+### Command Line Arguments
 
-Run the analyzer with:
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--contract` | NFT contract address (required) | - |
+| `--start` | Starting block number | 0 |
+| `--end` | Ending block number | latest |
+| `--batch` | Batch size for requests | 10000 |
+| `--output` | Output directory | auto-generated |
+
+## 📊 Output and Analysis
+
+ChainTrace creates a structured output directory containing:
 
 ```
-node nft_analyzer.js --contract CONTRACT_ADDRESS
+output_[contract]_[timestamp]/
+├── data/
+│   ├── transactions.csv
+│   ├── transactions.json
+│   └── raw_logs.json
+├── logs/
+│   ├── nft_analyzer.log
+│   └── run_parameters.json
+├── stats/
+│   ├── analysis_summary.txt
+│   └── analysis_stats.json
+└── README.md
 ```
 
-Similarly, you can override the RPC from your .env:
+### Analysis Insights
 
-```
-node nft_analyzer.js --rpc YOUR_RPC_URL --contract CONTRACT_ADDRESS
-```
+ChainTrace provides several key insights about the NFT collection:
 
-## Fallback and Rate Limiting Handling
+- ✅ Total number of mint events
+- 🔄 Total number of transfer events
+- 👥 Top addresses receiving NFTs
+- 📅 Busiest days for transactions
+- 🔍 Full transaction history for further analysis
 
-The tools now include:
-- Automatic fallback between multiple RPC providers when rate limits are hit
-- Batch size reduction when all providers hit rate limits
-- Intelligent retry logic with delays to avoid repeatedly hitting rate limits
+## 🛠️ Advanced Features
 
-## Output
+### Smart RPC Fallback
 
-The script will:
-1. Connect to the Ethereum blockchain
-2. Fetch all Transfer events for the specified contract
-3. Decode the events to extract transaction details
-4. Categorize events as MINT or TRANSFER
-5. Save the results to a CSV file with columns: `tx_hash`, `block`, `from`, `to`, `tokenId`, `type`, `date`
-6. Display basic statistics about the transactions
+ChainTrace intelligently handles rate limiting by:
+- Automatically switching between providers when rate limits are hit
+- Dynamically reducing batch sizes when necessary
+- Adding appropriate delays between retries
 
-## Tips
+### Performance Tips
 
-- For large contracts, fetching all events may take some time
-- If you encounter rate limits with all providers, try reducing the initial batch size with `--batch`
-- You can use `transactions.csv` for further analysis in tools like Excel or Python
+- For large contracts, use a smaller block range to avoid timeouts
+- Reduce the batch size with `--batch` parameter for busy contracts
+- For initial exploration, focus on a recent time period first
 
-## Example Analysis
+## 👨‍💻 Contributing
 
-After running the script, you'll get stats like:
-- Total number of mints and transfers
-- Top receivers of the NFTs
-- Busiest days for transactions 
+Contributions to ChainTrace are welcome! Feel free to submit a pull request or open an issue to improve the tool.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by Nat</p>
+  
+  <!-- <a href="https://github.com/yourusername">
+    <img src="https://github.com/yourusername.png" width="50px" alt="Profile" style="border-radius:50%" />
+  </a> -->
+</div> 
