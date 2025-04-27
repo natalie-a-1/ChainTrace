@@ -1,0 +1,46 @@
+# Lab 3 Preparation Guide: Reading NFT Smart-Contract Transactions
+
+This guide is designed to prepare you for the in-class lab, where you will query an Ethereum NFT contract, retrieve its transaction history, and distinguish between *mint* events and regular *transfers*.
+
+## 1. Objective
+By the end of the lab, you should be able to:
+- Connect to the Ethereum blockchain using a free HTTPS RPC endpoint (e.g., Alchemy, Infura, or Cloudflare Public RPC).
+- Retrieve all *Transfer* logs for a specified ERC-721 or ERC-1155 contract.
+- Differentiate between *mints* and *user-to-user transfers*.
+- Export your results and provide basic statistical summaries (e.g., total mints, top receiver, busiest day).
+
+## 2. Prerequisites
+| **Requirement**          | **Details**                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| Laptop + charger         | With Python >= 3.10 or Node.js >= 20.                                      |
+| Package manager          | pip or npm/yarn.                                                           |
+| Free RPC key             | Sign up with Alchemy or Infura and obtain your HTTPS endpoint URL.         |
+| Web3 library             | Python: `pip install web3 pandas` OR Node: `npm install ethers csv-writer`.|
+| Contract to analyze      | Will be provided during the lab.                                           |
+
+## 3. Background
+- ERC-721 and ERC-1155 NFTs emit a `Transfer(address indexed _from, address indexed _to, uint256 _tokenId)` event for every mint and transfer.
+- A *mint* is a *Transfer* event where `_from` is `0x0000000000000000000000000000000000000000`. Examples can be viewed on Etherscan.
+- All logs can be queried using the `eth_getLogs` RPC call, filtered by contract `address`.
+
+## 4. Lab Tasks (To Be Completed in Class)
+1. Note the target NFT collection contract address.
+2. Configure and use an RPC endpoint.
+3. Fetch logs for the block range 0 to latest using `Web3.eth.get_logs` (Python) or `provider.getLogs` (ethers.js).
+4. Decode each log to extract `from`, `to`, `tokenId`, and `blockNumber`.
+5. Categorize logs where `from == ZERO_ADDRESS` as `MINT`, and others as `TRANSFER`.
+6. Save the data to `transactions.csv` with columns: `[tx_hash, block, from, to, tokenId, type]`.
+7. Compute statistics, such as total mints and total transfers.
+8. (Bonus) Create simple visualizations, like a bar chart of mints vs. transfers (using Matplotlib or Chart.js).
+
+## 5. Deliverables
+- Your script for fetching the data.
+- `transactions.csv` containing all records with columns `[tx_hash, block, from, to, tokenId, type]`.
+- A report (template provided) including:
+  - A table of key statistics.
+
+## 6. Hints & Tips
+- **Rate Limits**: For large contracts, use pagination (e.g., 10,000 block windows) to avoid `eth_getLogs` limitations.
+- **ZERO_ADDRESS Constant**: `0x0000000000000000000000000000000000000000`.
+- **Testing**: Use a Goerli or Sepolia NFT for quick testing if mainnet fetches are slow.
+- **Security**: Never share private keys.

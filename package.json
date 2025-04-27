@@ -1,0 +1,15 @@
+{
+  "name": "nft-transaction-analyzer",
+  "version": "1.0.0",
+  "description": "Tool to analyze NFT transfer events on Ethereum",
+  "main": "nft_analyzer.js",
+  "scripts": {
+    "start": "node nft_analyzer.js"
+  },
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "csv-writer": "^1.6.0",
+    "yargs": "^17.7.2",
+    "dotenv": "^16.3.1"
+  }
+} 
